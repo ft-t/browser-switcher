@@ -12,16 +12,6 @@ import (
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
-type item struct {
-	title  string
-	desc   string
-	launch func() error
-}
-
-func (i item) Title() string       { return i.title }
-func (i item) Description() string { return i.desc }
-func (i item) FilterValue() string { return i.title }
-
 type model struct {
 	list   list.Model
 	logger zerolog.Logger
@@ -31,8 +21,8 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
+func (m model) Update(teamMsg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := teamMsg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
@@ -57,7 +47,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var cmd tea.Cmd
-	m.list, cmd = m.list.Update(msg)
+	m.list, cmd = m.list.Update(teamMsg)
 	return m, cmd
 }
 

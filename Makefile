@@ -18,10 +18,10 @@ build: build-win build-linux
 .PHONY: build-linux
 build-linux:
 	@mkdir -p dist
-	@GOOS=linux go build -o dist/BrowserSwitcher .
+	@GOOS=linux go build -buildvcs=false -o dist/BrowserSwitcher .
 
 .PHONY: build-win
 build-win:
 	@mkdir -p dist/win
-	@GOOS=windows go build -o dist/win/BrowserSwitcher.exe .
+	@GOOS=windows go build -buildvcs=false -o dist/win/BrowserSwitcher.exe .
 	@cp scripts/reg.reg dist/win/reg.reg

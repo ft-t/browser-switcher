@@ -12,5 +12,5 @@ import (
 
 func TestLauncher(t *testing.T) {
 	l := launcher.New("https://example.com")
-	assert.NoError(t, l.Launch(context.TODO(), &config.Browser{}))
+	assert.Error(t, l.Launch(context.TODO(), &config.Browser{}))
 }

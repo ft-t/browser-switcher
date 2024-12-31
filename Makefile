@@ -1,6 +1,8 @@
 .PHONY: build-debug
 build-debug: build-win
+	@cp dist/win/BrowserSwitcherProxied.exe /mnt/i/BrowserSwitcherProxied.exe
 	@cp dist/win/BrowserSwitcher.exe /mnt/i/BrowserSwitcher.exe
+	@cp dist/win/register.ps1 /mnt/i/register.ps1
 	@#GOOS=windows go build -o /mnt/i/BrowserSwitcher.exe .
 	@#cp scripts/register.ps1 /mnt/i/register.ps1
 	@#cp scripts/reg.reg /mnt/i/reg.reg
@@ -23,5 +25,9 @@ build-linux:
 .PHONY: build-win
 build-win:
 	@mkdir -p dist/win
-	@GOOS=windows go build -buildvcs=false -o dist/win/BrowserSwitcher.exe .
-	@cp scripts/reg.reg dist/win/reg.reg
+	@go install github.com/tc-hib/go-winres@latest
+	@GOOS=windows go build -buildvcs=false -o dist/win/BrowserSwitcherProxied.exe cmd/switcher/main.go
+	@GOOS=windows go build -ldflags -H=windowsgui -buildvcs=false -o dist/win/BrowserSwitcher.exe cmd/proxy/main.go cmd/proxy/win.go
+	@go-winres patch --in winres/winres.json --no-backup dist/win/BrowserSwitcherProxied.exe
+	@go-winres patch --in winres/winres.json --no-backup dist/win/BrowserSwitcher.exe
+	@cp scripts/register.ps1 dist/win/register.ps1

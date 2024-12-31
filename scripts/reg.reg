@@ -1,0 +1,38 @@
+Windows Registry Editor Version 5.00
+
+; Infamous capabilities:
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\BrowserSwitcher\Capabilities]
+"ApplicationDescription"="BrowserSwitcher"
+"ApplicationIcon"="I:\\BrowserSwitcher.exe,0"
+"ApplicationName"="BrowserSwitcher"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\BrowserSwitcher\Capabilities\FileAssociations]
+".htm"="BrowserSwitcherURL"
+".html"="BrowserSwitcherURL"
+".shtml"="BrowserSwitcherURL"
+".xht"="BrowserSwitcherURL"
+".xhtml"="BrowserSwitcherURL"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\BrowserSwitcher\Capabilities\URLAssociations]
+"ftp"="BrowserSwitcherURL"
+"http"="BrowserSwitcherURL"
+"https"="BrowserSwitcherURL"
+
+; Register to Default Programs
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications]
+"BrowserSwitcher"="Software\\BrowserSwitcher\\Capabilities"
+
+; BrowserSwitcherURL HANDLER:
+
+[HKEY_LOCAL_MACHINE\Software\Classes\BrowserSwitcherURL]
+@="BrowserSwitcher Document"
+"FriendlyTypeName"="BrowserSwitcher Document"
+
+[HKEY_LOCAL_MACHINE\Software\Classes\BrowserSwitcherURL\shell]
+
+[HKEY_LOCAL_MACHINE\Software\Classes\BrowserSwitcherURL\shell\open]
+
+[HKEY_LOCAL_MACHINE\Software\Classes\BrowserSwitcherURL\shell\open\command]
+@="\"I:\\BrowserSwitcher.exe\" \"%1\""

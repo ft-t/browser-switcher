@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+      - initial
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    env:
+      MAJOR_VERSION: 0
+    outputs:
+      versionSemVerOut: v${{ steps.semVer.outputs.semVersion }}
+    steps:
+      - id: semVer
+        run: echo "semVersion=$MAJOR_VERSION.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+  ci:
+    runs-on: ubuntu-latest
+    container: golang:1.23-bookworm
+    needs:
+      - version
+    env:
+      SEM_VERSION: ${{needs.version.outputs.versionSemVerOut}}
+    steps:
+      - name: Install zip
+        uses: montudor/action-zip@v1
+      - run: apt-get update && apt-get install -y build-essential git
+
+      - uses: actions/checkout@v4
+      - run: make build
+
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ env.SEM_VERSION }}
+          tag_name: ${{ env.SEM_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip dist win
+
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip
+          asset_name: browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip
+          asset_content_type: application/octet-stream

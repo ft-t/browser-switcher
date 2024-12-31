@@ -10,7 +10,7 @@ jobs:
     env:
       MAJOR_VERSION: 0
     outputs:
-      versionSemVerOut: v.${{ steps.semVer.outputs.semVersion }}
+      versionSemVerOut: v${{ steps.semVer.outputs.semVersion }}
     steps:
       - id: semVer
         run: echo "semVersion=$MAJOR_VERSION.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"

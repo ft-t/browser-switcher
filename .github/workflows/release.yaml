@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Install zip
         uses: montudor/action-zip@v1
-      - run: apt-get update && apt-get install -y build-essential
+      - run: apt-get update && apt-get install -y build-essential git
 
       - uses: actions/checkout@v4
       - run: make build

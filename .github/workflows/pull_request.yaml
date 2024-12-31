@@ -16,7 +16,6 @@ jobs:
       - uses: actions/checkout@v4
       - run: apk update && apk add curl openssl git openssh-client build-base && mkdir -p /root/.ssh
       - run: wget -O /usr/bin/mockgen https://github.com/skynet2/mock/releases/latest/download/mockgen && chmod 777 /usr/bin/mockgen
-      - run: make generate
       - run: go test -json -coverprofile=/root/coverage_temp.txt -covermode=atomic ./... > /root/test.json
       - run: cat /root/coverage_temp.txt | grep  -v "_mock.go" | grep -v "_mocks.go" | grep  -v "_mocks_test.go" | grep -v "_mock_test.go" > /root/coverage.txt || true
       - name: Upload coverage report

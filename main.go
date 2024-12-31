@@ -25,6 +25,7 @@ func main() {
 	lg := zerolog.New(zerolog.MultiLevelWriter(os.Stdout, logFile)).With().Timestamp().Logger()
 	log.Logger = lg
 
+	lg.Info().Msg("Starting browser-switcher")
 	ctx := lg.WithContext(context.Background())
 
 	if len(os.Args) < 2 {
@@ -59,5 +60,10 @@ func main() {
 			lg.Panic().Err(err).Msg("Failed to show manual browser selection")
 			return
 		}
+	}
+
+	if err = browserLauncher.Launch(ctx, targetBrowser); err != nil {
+		lg.Panic().Err(err).Msg("Failed to launch browser")
+		return
 	}
 }

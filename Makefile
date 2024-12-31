@@ -20,7 +20,7 @@ build: build-win build-linux
 .PHONY: build-linux
 build-linux:
 	@mkdir -p dist
-	@GOOS=linux go build -buildvcs=false -o dist/BrowserSwitcher .
+	@GOOS=linux go build -buildvcs=false -o dist/linux/BrowserSwitcher cmd/switcher/main.go
 
 .PHONY: build-win
 build-win:

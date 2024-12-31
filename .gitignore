@@ -27,3 +27,5 @@ go.work.sum
 .idea/
 
 fyne-cross/
+
+dist/

@@ -1,3 +1,5 @@
+//go:build windows
+
 package main
 
 import (
@@ -49,8 +51,8 @@ func run(ctx context.Context) error {
 	)
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		HideWindow:    true,
-		CreationFlags: 0x08000000,
+		HideWindow:    true,       // nolint
+		CreationFlags: 0x08000000, // nolint
 	}
 
 	return cmd.Start()

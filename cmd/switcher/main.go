@@ -10,6 +10,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 
 	config2 "github.com/ft-t/browser-switcher/pkg/config"
+	"github.com/ft-t/browser-switcher/pkg/escaper"
 	"github.com/ft-t/browser-switcher/pkg/launcher"
 	"github.com/ft-t/browser-switcher/pkg/selector"
 	"github.com/ft-t/browser-switcher/pkg/ui"
@@ -37,8 +38,11 @@ func main() {
 	}
 
 	targetURL := os.Args[1]
+	targetURL = escaper.Unescape(targetURL)
 
-	ctx = lg.With().Str("targetURL", targetURL).Logger().WithContext(ctx)
+	ctx = lg.With().Str("rawTargetURL", os.Args[1]).
+		Str("targetURL", targetURL).
+		Logger().WithContext(ctx)
 
 	browserConfig, err := config2.ReadConfig(ctx)
 

@@ -11,6 +11,8 @@ import (
 
 	"github.com/rs/zerolog"
 	"golang.org/x/sys/windows/registry"
+
+	"github.com/ft-t/browser-switcher/pkg/escaper"
 )
 
 func findAppRegistrationPath(ctx context.Context) (string, error) {
@@ -39,11 +41,18 @@ func run(ctx context.Context) error {
 		return err
 	}
 
+	var escapedArgs []string
+	for _, arg := range os.Args[1:] {
+		escapedArgs = append(escapedArgs, escaper.Escape(arg))
+	}
+
 	args := slices.Concat([]string{
 		"/C",
 		"start",
 		appPath,
-	}, os.Args[1:])
+	}, escapedArgs)
+
+	zerolog.Ctx(ctx).Debug().Msgf("running command: cmd.exe %v", escapedArgs)
 
 	cmd := exec.Command(
 		"cmd.exe",

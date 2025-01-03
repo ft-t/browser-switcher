@@ -15,8 +15,6 @@ build-linux:
 	@mkdir -p dist/linux
 	@GOOS=linux go build -buildvcs=false -o dist/linux/browser-switcher-proxied cmd/switcher/main.go
 	@GOOS=linux go build -buildvcs=false -o dist/linux/browser-switcher cmd/proxy/main.go cmd/proxy/linux.go
-	@cp -f scripts/register.sh dist/linux/
-	@cp -f scripts/browser-switcher.desktop dist/linux
 
 .PHONY: debug-linux
 debug-linux: build-linux

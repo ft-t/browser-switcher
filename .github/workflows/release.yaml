@@ -33,6 +33,14 @@ jobs:
       - uses: actions/checkout@v4
       - run: make build
 
+      - name: Create deb package
+        run: cd ci && bash ./deb.sh
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip .
+          working-directory: dist/win/
+
       - name: release
         uses: actions/create-release@v1
         id: create_release
@@ -44,12 +52,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - uses: montudor/action-zip@v1
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          args: zip -qq -r browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip .
-          working-directory: dist/win/
-
-      - run: cd ci && bash ./deb.sh
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ci/browser-switcher_${{ env.RAW_VERSION }}.deb
+          asset_name: browser-switcher_${{ env.RAW_VERSION }}.deb
+          asset_content_type: application/octet-stream
 
       - name: upload windows artifact
         uses: actions/upload-release-asset@v1
@@ -59,14 +70,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip
           asset_name: browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip
-          asset_content_type: application/octet-stream
-
-      - name: upload linux artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ci/browser-switcher_${{ env.RAW_VERSION }}.deb
-          asset_name: browser-switcher_${{ env.RAW_VERSION }}.deb
           asset_content_type: application/octet-stream

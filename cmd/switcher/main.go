@@ -3,31 +3,17 @@ package main
 import (
 	"context"
 	"os"
-	"path/filepath"
-
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	"gopkg.in/natefinch/lumberjack.v2"
 
 	config2 "github.com/ft-t/browser-switcher/pkg/config"
 	"github.com/ft-t/browser-switcher/pkg/escaper"
 	"github.com/ft-t/browser-switcher/pkg/launcher"
+	logger2 "github.com/ft-t/browser-switcher/pkg/logger"
 	"github.com/ft-t/browser-switcher/pkg/selector"
 	"github.com/ft-t/browser-switcher/pkg/ui"
 )
 
 func main() {
-	currentDir := filepath.Dir(os.Args[0])
-
-	logFile := &lumberjack.Logger{
-		Filename:   filepath.Join(currentDir, "logs", "log.log"),
-		MaxSize:    30,
-		MaxBackups: 3,
-		MaxAge:     10,
-		Compress:   false,
-	}
-	lg := zerolog.New(zerolog.MultiLevelWriter(os.Stdout, logFile)).With().Timestamp().Logger()
-	log.Logger = lg
+	lg := logger2.GetLogger()
 
 	lg.Info().Msgf("Starting browser-switcher. Args: %v", os.Args)
 	ctx := lg.WithContext(context.Background())

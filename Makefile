@@ -1,5 +1,5 @@
-.PHONY: build-debug
-build-debug: build-win
+.PHONY: debug-win
+debug-win: build-win
 	@cp dist/win/BrowserSwitcherProxied.exe /mnt/i/BrowserSwitcherProxied.exe
 	@cp dist/win/BrowserSwitcher.exe /mnt/i/BrowserSwitcher.exe
 	@cp dist/win/register.ps1 /mnt/i/register.ps1
@@ -10,17 +10,22 @@ build-debug: build-win
 	@#cp fyne-cross/bin/windows-amd64/browser-switcher.exe /mnt/i/BrowserSwitcher.exe
 ## powershell -ExecutionPolicy Bypass -File register.ps1
 
+.PHONY: build-linux
+build-linux:
+	@mkdir -p dist/linux
+	@GOOS=linux go build -buildvcs=false -o dist/linux/browser-switcher-proxied cmd/switcher/main.go
+	@GOOS=linux go build -buildvcs=false -o dist/linux/browser-switcher cmd/proxy/main.go cmd/proxy/linux.go
+
+.PHONY: debug-linux
+debug-linux: build-linux
+	@cd dist/linux && bash install.sh
+
 .PHONY: lint
 lint:
 	@golangci-lint run
 
 .PHONY: build
 build: build-win build-linux
-
-.PHONY: build-linux
-build-linux:
-	@mkdir -p dist
-	@GOOS=linux go build -buildvcs=false -o dist/linux/BrowserSwitcher cmd/switcher/main.go
 
 .PHONY: build-win
 build-win:

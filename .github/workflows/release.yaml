@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - initial
+      - linux
 
 jobs:
   version:
@@ -11,9 +11,12 @@ jobs:
       MAJOR_VERSION: 0
     outputs:
       versionSemVerOut: v${{ steps.semVer.outputs.semVersion }}
+      rawVerOut: ${{ steps.semVer.outputs.semVersion }}
     steps:
       - id: semVer
         run: echo "semVersion=$MAJOR_VERSION.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+      - id: raw
+        run: echo "rawVerOut=$MAJOR_VERSION.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
   ci:
     runs-on: ubuntu-latest
     container: golang:1.23-bookworm
@@ -21,6 +24,7 @@ jobs:
       - version
     env:
       SEM_VERSION: ${{needs.version.outputs.versionSemVerOut}}
+      RAW_VERSION: ${{needs.version.outputs.rawVerOut}}
     steps:
       - name: Install zip
         uses: montudor/action-zip@v1
@@ -28,6 +32,14 @@ jobs:
 
       - uses: actions/checkout@v4
       - run: make build
+
+      - name: Create deb package
+        run: cd ci && bash ./deb.sh
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip .
+          working-directory: dist/win/
 
       - name: release
         uses: actions/create-release@v1
@@ -40,10 +52,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - uses: montudor/action-zip@v1
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          args: zip -qq -r browser-switcher-${{ env.SEM_VERSION }}-windows-amd64.zip .
-          working-directory: dist/win/
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ci/browser-switcher_${{ env.RAW_VERSION }}.deb
+          asset_name: browser-switcher_${{ env.RAW_VERSION }}.deb
+          asset_content_type: application/octet-stream
 
       - name: upload windows artifact
         uses: actions/upload-release-asset@v1

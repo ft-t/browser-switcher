@@ -8,7 +8,7 @@ cat <<EOF > $TARGET_FOLDER/DEBIAN/control
 Package: browser-switcher
 Version: $RAW_VERSION
 Architecture: all
-Maintainer: FT-T <your.email@example.com>
+Maintainer: FT-T <https://github.com/ft-t/browser-switcher>
 Description: A tool to switch between browsers.
 Priority: optional
 Depends: xdg-utils

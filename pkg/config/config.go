@@ -30,11 +30,15 @@ type Browser struct {
 func ReadConfig(ctx context.Context) (*Config, error) {
 	targetFile := "config.json"
 
+	//if runtime.GOOS == "windows" {
 	if homeDir, err := os.UserHomeDir(); err == nil {
 		targetFile = filepath.Join(homeDir, "BrowserSwitcher", "config.json")
 	} else {
 		zerolog.Ctx(ctx).Error().Err(err).Msg("failed to get user home directory")
 	}
+	//} else {
+	//	targetFile = "/etc/browser-switcher/config.json"
+	//}
 
 	zerolog.Ctx(ctx).Info().Msgf("loading config from %s", targetFile)
 

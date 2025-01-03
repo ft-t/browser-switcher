@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Browser Switcher
+Exec=/usr/local/bin/browser-switcher %U
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/http;x-scheme-handler/https;
+Categories=Network;WebBrowser;
+StartupNotify=true
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;

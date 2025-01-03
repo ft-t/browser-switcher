@@ -3,6 +3,7 @@ package logger
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -10,10 +11,14 @@ import (
 )
 
 func GetLogger() zerolog.Logger {
-	currentDir := filepath.Dir(os.Args[0])
+	currentDir := filepath.Join(filepath.Dir(os.Args[0]), "logs")
+
+	if runtime.GOOS != "windows" {
+		currentDir = "/tmp/"
+	}
 
 	logFile := &lumberjack.Logger{
-		Filename:   filepath.Join(currentDir, "logs", "log.log"),
+		Filename:   filepath.Join(currentDir, "browser-switcher.log"),
 		MaxSize:    30,
 		MaxBackups: 3,
 		MaxAge:     10,

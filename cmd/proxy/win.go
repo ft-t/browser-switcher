@@ -48,10 +48,11 @@ func run(ctx context.Context) error {
 
 	args := slices.Concat([]string{
 		"/C",
+		"start",
 		appPath,
 	}, escapedArgs)
 
-	zerolog.Ctx(ctx).Debug().Msgf("running command (proxy): %v", args)
+	zerolog.Ctx(ctx).Debug().Msgf("running command: cmd.exe %v", escapedArgs)
 
 	cmd := exec.Command(
 		"cmd.exe",
